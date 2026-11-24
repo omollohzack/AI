@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ "Create account" if mode == "register" else "Sign in" }} · AI Code Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-showcase" aria-label="AI Code Assistant">
+        <div class="auth-brand">
+          <div class="brand-mark" aria-hidden="true">&lt;/&gt;</div>
+          <span>Code Studio</span>
+        </div>
+        <div class="auth-copy">
+          <p class="auth-kicker">AI-powered development</p>
+          <h1>Turn ideas into<br><span>working code.</span></h1>
+          <p>Build functions, explore APIs, debug problems, and learn faster with your personal code assistant.</p>
+        </div>
+        <div class="auth-glow glow-one"></div>
+        <div class="auth-glow glow-two"></div>
+      </section>
+
+      <section class="auth-panel">
+        <a class="auth-mobile-brand" href="{{ url_for('login') }}">
+          <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+          <strong>Code Studio</strong>
+        </a>
+
+        <form class="auth-card" method="post" action="{{ url_for('register_post') if mode == 'register' else url_for('login_post') }}">
+          <div class="auth-heading">
+            <p>{{ "Welcome" if mode == "login" else "Get started" }}</p>
+            <h2>{{ "Sign in to your account" if mode == "login" else "Create your account" }}</h2>
+          </div>
+
+          {% if error %}
+            <div class="auth-error" role="alert">{{ error }}</div>
+          {% endif %}
+          {% if oauth_error %}
+            <div class="auth-error" role="alert">{{ oauth_error }}</div>
+          {% endif %}
+
+          <div class="social-signin" aria-label="Social sign-in">
+            <a class="social-button" href="{{ url_for('oauth_login', provider='google') }}" title="Continue with Google">
+              <img class="provider-logo" src="{{ url_for('static', filename='icons/google.png') }}" alt="">
+              <span>Google</span>
+            </a>
+            <a class="social-button" href="{{ url_for('oauth_login', provider='apple') }}" title="Continue with Apple">
+              <img class="provider-logo" src="{{ url_for('static', filename='icons/apple.png') }}" alt="">
+              <span>Apple</span>
+            </a>
+            <a class="social-button" href="{{ url_for('oauth_login', provider='github') }}" title="Continue with GitHub">
+              <img class="provider-logo" src="{{ url_for('static', filename='icons/github.png') }}" alt="">
+              <span>GitHub</span>
+            </a>
+          </div>
+
+          <div class="auth-divider"><span>or continue with email</span></div>
+
+          <label>
+            <span>Email address</span>
+            <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="Enter your password" minlength="{{ 8 if mode == 'register' else 1 }}" required>
+          </label>
+
+          {% if mode == "register" %}
+            <label>
+              <span>Confirm password</span>
+              <input type="password" name="confirm_password" autocomplete="new-password" placeholder="Repeat your password" minlength="8" required>
+            </label>
+          {% endif %}
+
+          <button class="auth-submit" type="submit">
+            {{ "Create account" if mode == "register" else "Sign in" }}
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p class="auth-switch">
+            {% if mode == "register" %}
+              Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+            {% else %}
+              New to Code Studio? <a href="{{ url_for('register') }}">Create an account</a>
+            {% endif %}
+          </p>
+        </form>
+        <p class="auth-footer">Private workspace · Your prompts stay in this app</p>
+      </section>
+    </main>
+  </body>
+</html>

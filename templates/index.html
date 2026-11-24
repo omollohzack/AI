@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Code Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">&lt;/&gt;</div>
+          <div>
+            <strong>Code Studio</strong>
+            <span>AI Assistant</span>
+          </div>
+        </div>
+
+        <button class="new-chat" id="new-chat" type="button">
+          <span aria-hidden="true">+</span>
+          New conversation
+        </button>
+
+        <nav class="history" aria-label="Prompt history">
+          <p>Today</p>
+          <button class="history-item" data-prompt="Write a Python function that validates an email address">
+            Email validator
+          </button>
+          <button class="history-item" data-prompt="Create a REST API endpoint with Flask">
+            Flask API endpoint
+          </button>
+        </nav>
+
+        <div class="api-status {% if api_configured %}ready{% endif %}">
+          <span class="status-dot"></span>
+          {% if api_configured %}API connected{% else %}API key needed{% endif %}
+        </div>
+        <div class="account">
+          <span class="account-avatar">{{ email[0]|upper if email else "U" }}</span>
+          <div class="account-info">
+            <strong>Signed in</strong>
+            <span>{{ email }}</span>
+          </div>
+          <form action="{{ url_for('logout') }}" method="post">
+            <button class="logout-button" type="submit" title="Sign out" aria-label="Sign out">↗</button>
+          </form>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Workspace</p>
+            <h1>AI Code Assistant</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="model-button" id="model-settings-button" type="button">
+              <span class="model-status-dot"></span>
+              <span>{{ provider_name }} · {{ model }}</span>
+              <span aria-hidden="true">⌄</span>
+            </button>
+            <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">
+              <span aria-hidden="true">☼</span>
+            </button>
+          </div>
+        </header>
+
+        <section class="conversation" id="conversation" aria-live="polite">
+          <div class="welcome">
+            <div class="welcome-icon" aria-hidden="true">&lt;/&gt;</div>
+            <h2>What are we building?</h2>
+            <p>Describe a function, API, algorithm, or application in plain language.</p>
+            <div class="suggestions">
+              <button type="button" data-prompt="Create a Python contact manager using a dictionary">
+                <span>Dictionary app</span>
+                <small>Build a small data manager</small>
+              </button>
+              <button type="button" data-prompt="Write a FastAPI endpoint that returns paginated JSON results">
+                <span>REST endpoint</span>
+                <small>Create a FastAPI route</small>
+              </button>
+              <button type="button" data-prompt="Explain recursion and show a Python example">
+                <span>Learn a concept</span>
+                <small>Get an explanation and example</small>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="composer-wrap">
+          <form class="composer" id="composer">
+            <textarea id="prompt" rows="1" maxlength="12000" placeholder="Ask for code, debugging help, or an explanation..." aria-label="Prompt"></textarea>
+            <button class="send-button" id="send-button" type="submit" aria-label="Send prompt">
+              <span aria-hidden="true">↑</span>
+            </button>
+          </form>
+          <p class="disclaimer">The assistant can make mistakes. Review generated code before using it.</p>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="model-modal" hidden>
+      <section class="model-modal" role="dialog" aria-modal="true" aria-labelledby="model-modal-title">
+        <header class="model-modal-header">
+          <div><p>Connection</p><h2 id="model-modal-title">Model settings</h2></div>
+          <button class="modal-close" id="model-modal-close" type="button" aria-label="Close">×</button>
+        </header>
+        <form id="model-settings-form">
+          <label>
+            <span>Provider name</span>
+            <input id="provider-name" name="provider_name" value="{{ provider_name }}" placeholder="OpenAI, NVIDIA, Azure, Local...">
+          </label>
+          <label>
+            <span>API key</span>
+            <div class="secret-field">
+              <input id="model-api-key" name="api_key" type="password" autocomplete="off" placeholder="{% if api_configured %}API key saved{% else %}Paste your API key{% endif %}">
+              <button id="toggle-api-key" type="button" aria-label="Show API key">Show</button>
+            </div>
+          </label>
+          <label>
+            <span>Base URL <small>Optional for standard OpenAI</small></span>
+            <input id="base-url" name="base_url" type="url" placeholder="https://api.openai.com/v1">
+          </label>
+          <label>
+            <span>Model name or ID</span>
+            <input id="model-name" name="model" value="{{ model }}" placeholder="gpt-4o-mini or custom-model-id" required>
+          </label>
+          <p class="model-help">Use any provider that supports the OpenAI chat-completions API, including NVIDIA, OpenRouter, Azure-compatible gateways, or a local server.</p>
+          <div id="model-settings-error" class="model-settings-error" hidden></div>
+          <button class="model-save" type="submit">Save &amp; connect</button>
+        </form>
+      </section>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
