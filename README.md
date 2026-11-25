@@ -1,24 +1,26 @@
 # AI Code Assistant
 
-A small Python web app that generates code snippets from natural-language prompts using the OpenAI API.
+A small Python web app that generates code snippets from natural-language prompts using configurable OpenAI-compatible model APIs.
 
 ## How it works
 
 - Provides a responsive GitHub-style chat interface
-- Sends prompts to a modern OpenAI chat model
+- Sends prompts to an OpenAI-compatible chat-completions API
 - Shows generated code in copy-ready blocks
+- Supports NVIDIA, OpenAI, OpenRouter, and custom compatible endpoints
 - Keeps the original terminal interface available
 
 ## Run it
 
 ```bash
 pip install -r requirements.txt
-set OPENAI_API_KEY=your_api_key
 python app.py
 ```
 
 Open `http://127.0.0.1:5000`.
 Create an account on the sign-up screen, or sign in after registering.
+Open **Model settings** to choose a provider, enter its API key and model ID, and save. Choose **Custom OpenAI-compatible endpoint** to configure another compatible service. The NVIDIA preset fills in `https://integrate.api.nvidia.com/v1`; use a model ID available to your NVIDIA account.
+The model API key is separate from Google, Apple, or GitHub sign-in credentials. Provider APIs must support the OpenAI chat-completions format; native Anthropic and Gemini API formats are not supported.
 Set `FLASK_SECRET_KEY` to a strong private value before exposing the app beyond your local machine.
 
 ## Social sign-in
@@ -44,6 +46,9 @@ Callback URLs:
 To use the original terminal interface:
 
 ```bash
+set OPENAI_API_KEY=your_api_key
+set OPENAI_BASE_URL=https://integrate.api.nvidia.com/v1
+set OPENAI_MODEL=your-model-id
 python AIChat.py
 ```
 

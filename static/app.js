@@ -147,15 +147,42 @@ const modelSettingsForm = document.getElementById("model-settings-form");
 const modelSettingsError = document.getElementById("model-settings-error");
 const toggleApiKey = document.getElementById("toggle-api-key");
 const modelApiKey = document.getElementById("model-api-key");
+const providerPreset = document.getElementById("provider-preset");
+const providerName = document.getElementById("provider-name");
+const baseUrl = document.getElementById("base-url");
+const modelName = document.getElementById("model-name");
+
+const providerPresets = {
+  nvidia: { name: "NVIDIA", baseUrl: "https://integrate.api.nvidia.com/v1" },
+  openai: { name: "OpenAI", baseUrl: "https://api.openai.com/v1", model: "gpt-4o-mini" },
+  openrouter: { name: "OpenRouter", baseUrl: "https://openrouter.ai/api/v1" },
+};
+
+providerPreset.addEventListener("change", () => {
+  const preset = providerPresets[providerPreset.value];
+  if (preset) {
+    providerName.value = preset.name;
+    baseUrl.value = preset.baseUrl;
+    modelName.value = preset.model || "";
+  } else {
+    providerName.value = "Custom";
+    baseUrl.value = "";
+    modelName.value = "";
+  }
+});
 
 async function openModelSettings() {
   modelModal.hidden = false;
   try {
     const response = await fetch("/api/models/settings");
     const settings = await response.json();
-    document.getElementById("provider-name").value = settings.provider_name || "Custom";
-    document.getElementById("base-url").value = settings.base_url || "";
-    document.getElementById("model-name").value = settings.model || "";
+    providerName.value = settings.provider_name || "Custom";
+    const preset = Object.keys(providerPresets).find(
+      (key) => providerPresets[key].name.toLowerCase() === providerName.value.toLowerCase(),
+    );
+    providerPreset.value = preset || "custom";
+    baseUrl.value = settings.base_url || "";
+    modelName.value = settings.model || "";
     modelApiKey.value = settings.api_key ? "••••••••" : "";
   } catch (_) {}
   modelModalClose.focus();
@@ -186,9 +213,9 @@ modelSettingsForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   modelSettingsError.hidden = true;
   const payload = {
-    provider_name: document.getElementById("provider-name").value,
+    provider_name: providerName.value,
     api_key: modelApiKey.value,
-    base_url: document.getElementById("base-url").value,
+    base_url: baseUrl.value,
     model: document.getElementById("model-name").value,
   };
   try {

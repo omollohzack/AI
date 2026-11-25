@@ -108,6 +108,15 @@
         </header>
         <form id="model-settings-form">
           <label>
+            <span>Provider preset</span>
+            <select id="provider-preset" name="provider_preset">
+              <option value="custom">Custom OpenAI-compatible endpoint</option>
+              <option value="nvidia">NVIDIA</option>
+              <option value="openai">OpenAI</option>
+              <option value="openrouter">OpenRouter</option>
+            </select>
+          </label>
+          <label>
             <span>Provider name</span>
             <input id="provider-name" name="provider_name" value="{{ provider_name }}" placeholder="OpenAI, NVIDIA, Azure, Local...">
           </label>
@@ -119,14 +128,14 @@
             </div>
           </label>
           <label>
-            <span>Base URL <small>Optional for standard OpenAI</small></span>
-            <input id="base-url" name="base_url" type="url" placeholder="https://api.openai.com/v1">
+            <span>Base URL <small>Auto-filled by presets</small></span>
+            <input id="base-url" name="base_url" type="url" placeholder="https://integrate.api.nvidia.com/v1">
           </label>
           <label>
             <span>Model name or ID</span>
-            <input id="model-name" name="model" value="{{ model }}" placeholder="gpt-4o-mini or custom-model-id" required>
+            <input id="model-name" name="model" value="{{ model }}" placeholder="Enter a model ID supported by this provider" required>
           </label>
-          <p class="model-help">Use any provider that supports the OpenAI chat-completions API, including NVIDIA, OpenRouter, Azure-compatible gateways, or a local server.</p>
+          <p class="model-help">Use NVIDIA, OpenAI, OpenRouter, or another endpoint that supports the OpenAI chat-completions API. Choose Custom and enter its base URL for other compatible services. Native API formats such as Anthropic or Gemini are not supported yet.</p>
           <div id="model-settings-error" class="model-settings-error" hidden></div>
           <button class="model-save" type="submit">Save &amp; connect</button>
         </form>

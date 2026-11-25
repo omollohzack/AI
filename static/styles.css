@@ -369,7 +369,8 @@ button { cursor: pointer; }
 .model-modal label { display: block; margin-bottom: 15px; }
 .model-modal label > span { display: flex; justify-content: space-between; margin-bottom: 7px; color: #c9d1d9; font-size: 12px; font-weight: 600; }
 .model-modal label small { color: #8b949e; font-weight: 400; }
-.model-modal input {
+.model-modal input,
+.model-modal select {
   width: 100%;
   height: 42px;
   padding: 0 12px;
@@ -379,7 +380,8 @@ button { cursor: pointer; }
   background: #0d1117;
   color: #f0f6fc;
 }
-.model-modal input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88, 166, 255, .10); }
+.model-modal input:focus,
+.model-modal select:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88, 166, 255, .10); }
 .secret-field { display: flex; }
 .secret-field input { border-radius: 7px 0 0 7px; }
 .secret-field button { width: 58px; border: 1px solid #30363d; border-left: 0; border-radius: 0 7px 7px 0; background: #21262d; color: #8b949e; font-size: 11px; }
